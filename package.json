@@ -2,7 +2,7 @@
   "name": "fibonachos-sql",
   "version": "1.0.0",
   "description": "Fibonachos Gruppexamen",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "start": "node server.js",
     "dev": "npx nodemon server.js"
