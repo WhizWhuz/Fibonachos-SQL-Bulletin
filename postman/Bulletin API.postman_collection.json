@@ -1,0 +1,129 @@
+{
+  "info": {
+    "_postman_id": "cb8e3b00-f23a-4358-936d-67f1002b6406",
+    "name": "Bulletin API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "43559276",
+    "_collection_link": "https://blue-capsule-2795050.postman.co/workspace/Bulletin~185d99f7-699c-40b0-975b-ed2264108ddb/collection/43559276-cb8e3b00-f23a-4358-936d-67f1002b6406?action=share&source=collection_link&creator=43559276"
+  },
+  "item": [
+    {
+      "name": "POST ✅",
+      "item": [
+        {
+          "name": "POST - Users",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:4000/users",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "4000",
+              "path": ["users"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST - Subscriptions",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:4000/subscriptions",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "4000",
+              "path": ["subscriptions"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST - Channels",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:4000/channels",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "4000",
+              "path": ["channels"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST - Messages",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:4000/channels",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "4000",
+              "path": ["channels"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "GET ✅",
+      "item": [
+        {
+          "name": "GET - User ID Channels",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:4000/users/:id/channels",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "4000",
+              "path": ["users", ":id", "channels"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET - Channels ID Messages",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:4000/users/:id/channels",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "4000",
+              "path": ["users", ":id", "channels"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
