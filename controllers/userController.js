@@ -51,7 +51,7 @@ exports.listUsers = async (req, res) => {
 	}
 };
 
-exports.getUserChannels = async (req, res) => {
+exports.getUserOwnedChannels = async (req, res) => {
 	const userId = req.params.id;
 
 	try {
@@ -68,5 +68,27 @@ exports.getUserChannels = async (req, res) => {
 	} catch (error) {
 		console.error("Failed to fetch channels:", error);
 		res.status(500).json({ error: "Error when fetching channels" });
+	}
+};
+
+exports.getUserSubscriptions = async (req, res) => {
+	const userId = req.params.id;
+
+	try {
+		const result = await pool.query(
+			`SELECT channels.* FROM channels JOIN subscriptions ON channels.channel_id = subscriptions.channel_id WHERE subscriptions.user_id = $1`,
+			[userId]
+		);
+
+		if (result.rows.length === 0) {
+			return res
+				.status(404)
+				.json({ message: "User is not subscribed to any channels!" });
+		}
+
+		res.json(result.rows);
+	} catch (error) {
+		console.error("Failed to fetch subscriptions:", error);
+		res.status(500).json({ error: "Error when fetching user subscriptions!" });
 	}
 };
