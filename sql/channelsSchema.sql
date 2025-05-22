@@ -7,3 +7,9 @@ CREATE TABLE channels (
 
     FOREIGN KEY (owner_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
+
+
+
+
+
+

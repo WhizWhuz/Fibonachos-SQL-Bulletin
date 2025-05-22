@@ -1,6 +1,10 @@
 # **SQL Bulletin** **_Fibonachos gruppexamen_** _NO⭐_
 
-**Instructions:**
+### Video presentation: 📼 https://youtu.be/Ppyt-hJbEL0 📼
+
+---
+
+### **Instructions:**
 
 1. Use `npm install` to install packages.
 

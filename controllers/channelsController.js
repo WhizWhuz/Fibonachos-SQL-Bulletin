@@ -18,7 +18,12 @@ exports.createChannel = async (req, res) => {
   }
 };
 
-// Can be found in ('../controllers/messagesController.js')
+
+
+
+
+
+//! Can be found in ('../controllers/messagesController.js')
 // exports.getMessagesByChannel = async (req, res) => {
 //   const channelId = req.params.id;
 

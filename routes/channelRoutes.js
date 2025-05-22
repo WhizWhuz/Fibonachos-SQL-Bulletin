@@ -8,3 +8,7 @@ router.route("/").post(channelsController.createChannel);
 router.route("/:id/messages").get(messagesController.getChannelMessages);
 
 module.exports = router;
+
+
+
+
