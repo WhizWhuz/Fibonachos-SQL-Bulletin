@@ -12,8 +12,27 @@ exports.createSubscription = async (req, res) => {
 		);
 
 		res.status(201).json(result.rows[0]);
-	} catch (err) {
-		console.error("Failed to subscribe: ", err);
+	} catch (error) {
+		console.error("Failed to subscribe: ", error);
 		res.status(500).json({ error: "Could not subscribe to channel!" });
+	}
+};
+
+exports.deleteSubscription = async (req, res) => {
+	const { userId, channelId } = req.params;
+
+	try {
+		const result = await pool.query(
+			"DELETE FROM subscriptions WHERE user_id = $1 AND channel_id = $2 RETURNING *",
+			[userId, channelId]
+		);
+
+		res.status(200).json({
+			message: `Successfully unsubscribed from channel ${channelId}!`,
+			unsubscribed: result.rows[0],
+		});
+	} catch (error) {
+		console.error("Failed to unsubscribe: ", error);
+		res.status(500).json({ error: "Could not unsubscribe from the channel!" });
 	}
 };
