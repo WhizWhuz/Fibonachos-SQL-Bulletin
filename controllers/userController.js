@@ -8,7 +8,9 @@ exports.createUser = async (req, res) => {
 			"INSERT INTO users (username, email) VALUES ($1, $2) RETURNING *",
 			[username, email]
 		);
-		res.status(201).json(result.rows[0]);
+		res
+			.status(201)
+			.json({ message: "User created successfully!", user: result.rows[0] });
 	} catch (error) {
 		console.error("Failed to create a user: ", error);
 		res.status(500).json({ error: "Error creating new user!" });
@@ -44,14 +46,17 @@ exports.listUsers = async (req, res) => {
 			return res.status(404).json({ message: "There are no users!" });
 		}
 
-		res.status(200).json(result.rows);
+		res.status(200).json({
+			message: "List of users fetched successfully!",
+			users: result.rows,
+		});
 	} catch (error) {
 		console.error("Failed to get a list of users: ", error);
 		res.status(500).json({ error: "Error getting user list!" });
 	}
 };
 
-exports.getUserChannels = async (req, res) => {
+exports.getUserOwnedChannels = async (req, res) => {
 	const userId = req.params.id;
 
 	try {
@@ -64,9 +69,37 @@ exports.getUserChannels = async (req, res) => {
 			return res.status(404).json({ message: "This user owns no channels!" });
 		}
 
-		res.json(result.rows);
+		res.status(200).json({
+			message: "User owned channels fetched successfully!",
+			channels: result.rows,
+		});
 	} catch (error) {
 		console.error("Failed to fetch channels:", error);
 		res.status(500).json({ error: "Error when fetching channels" });
+	}
+};
+
+exports.getUserSubscriptions = async (req, res) => {
+	const userId = req.params.id;
+
+	try {
+		const result = await pool.query(
+			`SELECT channels.* FROM channels JOIN subscriptions ON channels.channel_id = subscriptions.channel_id WHERE subscriptions.user_id = $1`,
+			[userId]
+		);
+
+		if (result.rows.length === 0) {
+			return res
+				.status(404)
+				.json({ message: "User is not subscribed to any channels!" });
+		}
+
+		res.status(200).json({
+			message: "User subscriptions fetched successfully!",
+			subscriptions: result.rows,
+		});
+	} catch (error) {
+		console.error("Failed to fetch subscriptions:", error);
+		res.status(500).json({ error: "Error when fetching user subscriptions!" });
 	}
 };

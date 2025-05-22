@@ -10,28 +10,41 @@ const db = require("../db/db");
 */
 
 const createMessage = async (req, res) => {
-  const { content, user_id } = req.body;
-  const channelId = parseInt(req.params.id);
+	const { content, user_id } = req.body;
+	const channelId = parseInt(req.params.id);
 
-  try {
-    const channelCheck = await db.query(
-      "SELECT id FROM channels WHERE id = $1",
-      [channelId]
-    );
-    if (channelCheck.rows.length === 0) {
-      return res.status(404).json({ error: "Channel not found" });
-    }
+	try {
+		// Check if channel exists
+		const channelCheck = await db.query(
+			"SELECT channel_id FROM channels WHERE channel_id = $1",
+			[channelId]
+		);
+		if (channelCheck.rows.length === 0) {
+			return res.status(404).json({ error: "Channel not found" });
+		}
 
-    const result = await db.query(
-      "INSERT INTO messages (content, user_id, channel_id) VALUES ($1, $2, $3) RETURNING *",
-      [content, user_id, channelId]
-    );
+		//Check if user is subscribed to chosen channel
+		const subscriptionCheck = await db.query(
+			"SELECT * FROM subscriptions WHERE user_id = $1 AND channel_id = $2",
+			[user_id, channelId]
+		);
 
-    res.status(201).json(result.rows[0]);
-  } catch (error) {
-    console.error("Error creating message:", error);
-    res.status(500).json({ error: "Internal server error" });
-  }
+		if (subscriptionCheck.rows.length === 0) {
+			return res
+				.status(403)
+				.json({ error: "User is not subscribed to this channel!" });
+		}
+
+		const result = await db.query(
+			"INSERT INTO messages (content, user_id, channel_id) VALUES ($1, $2, $3) RETURNING *",
+			[content, user_id, channelId]
+		);
+
+		res.status(201).json(result.rows[0]);
+	} catch (error) {
+		console.error("Error creating message:", error);
+		res.status(500).json({ error: "Internal server error" });
+	}
 };
 
 // Get messages in a channel
@@ -79,11 +92,11 @@ const getChannelMessages = async (req, res) => {
   m.channel_id,
   c.name AS channel_name,
   m.created_at
-FROM messages m
-JOIN users u ON m.user_id = u.user_id
-JOIN channels c ON m.channel_id = c.channel_id
-WHERE m.channel_id = $1
-ORDER BY m.created_at ASC;
+      FROM messages m
+      JOIN users u ON m.user_id = u.user_id
+      JOIN channels c ON m.channel_id = c.channel_id
+      WHERE m.channel_id = $1
+      ORDER BY m.created_at ASC;
 `,
       [channelId]
     );

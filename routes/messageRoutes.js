@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const {
-  createMessage,
-  getChannelMessages,
+	createMessage,
+	getChannelMessages,
 } = require("../controllers/messagesController");
 
 // Create a new message in a channel
@@ -15,5 +15,4 @@ router.post("/:id", createMessage);
 
 // Get all messages in a channel (inside ('../routes/channelRoutes') now) \\
 // router.get("/channels/:id/messages", getChannelMessages);
-
 module.exports = router;
