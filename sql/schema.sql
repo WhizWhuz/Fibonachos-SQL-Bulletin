@@ -2,10 +2,11 @@
 -- 💣 DROP ALL TABLES
 -- ========================
 
-DROP TABLE IF EXISTS subscriptions;
-DROP TABLE IF EXISTS messages;
-DROP TABLE IF EXISTS channels;
-DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS subscriptions CASCADE;
+DROP TABLE IF EXISTS messages CASCADE;
+DROP TABLE IF EXISTS channels CASCADE;
+DROP TABLE IF EXISTS users CASCADE;
+
 
 -- ========================
 -- 👤 USERS
@@ -33,7 +34,7 @@ CREATE TABLE channels (
 
 
 -- ========================
--- 🗣️ SUBSCRIPTIONS
+-- 📩 SUBSCRIPTIONS
 -- ========================
 
 CREATE TABLE subscriptions (
@@ -56,15 +57,4 @@ CREATE TABLE messages (
     channel_id INTEGER NOT NULL REFERENCES channels(channel_id) ON DELETE CASCADE,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-);
-
--- ========================
--- 📩 SUBSCRIPTIONS
--- ========================
-
-CREATE TABLE subscriptions (
-  user_id INTEGER NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
-  channel_id INTEGER NOT NULL REFERENCES channels(channel_id) ON DELETE CASCADE,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (user_id, channel_id)
 );
