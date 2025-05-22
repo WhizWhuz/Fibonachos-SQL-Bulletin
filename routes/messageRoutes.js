@@ -13,7 +13,6 @@ const {
 
 router.post("/:id", createMessage);
 
-// Get all messages in a channel
-router.get("/:id", getChannelMessages);
-
+// Get all messages in a channel (inside ('../routes/channelRoutes') now) \\
+// router.get("/channels/:id/messages", getChannelMessages);
 module.exports = router;
