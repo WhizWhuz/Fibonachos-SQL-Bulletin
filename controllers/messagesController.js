@@ -23,6 +23,18 @@ const createMessage = async (req, res) => {
 			return res.status(404).json({ error: "Channel not found" });
 		}
 
+		//Check if user is subscribed to chosen channel
+		const subscriptionCheck = await db.query(
+			"SELECT * FROM subscriptions WHERE user_id = $1 AND channel_id = $2",
+			[user_id, channelId]
+		);
+
+		if (subscriptionCheck.rows.length === 0) {
+			return res
+				.status(403)
+				.json({ error: "User is not subscribed to this channel!" });
+		}
+
 		const result = await db.query(
 			"INSERT INTO messages (content, user_id, channel_id) VALUES ($1, $2, $3) RETURNING *",
 			[content, user_id, channelId]
