@@ -5,7 +5,7 @@
 1. Use `npm install` to install packages.
 
 2. Create `config.env` in root folder containing: <br>`PORT=4000`<br>
-   `DATABASE_URL=postgresql://username:password@localhost:5432/bulletin_db`
+   `DATABASE_URL=postgresql://username:password@localhost:5432/databasename`
 
 3. Run `/sql/schema.sql`.
 
@@ -37,4 +37,4 @@
 
 **SQL Folder** 📐
 
-- For all SQL schemas, seed and the **schema.sql** that you run first.
+- For all SQL schemas. **Seed** and the **schema.sql** that you run first.
