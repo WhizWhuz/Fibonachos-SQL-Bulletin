@@ -1,4 +1,4 @@
-const db = require('../db/db');
+const db = require("../db/db");
 
 // Create a new message
 /*TODO: ta in CONTENT från BODY 
@@ -10,26 +10,28 @@ const db = require('../db/db');
 */
 
 const createMessage = async (req, res) => {
-    const { content, user_id } = req.body;
-    const channelId = parseInt(req.params.id);
+  const { content, user_id } = req.body;
+  const channelId = parseInt(req.params.id);
 
-    try {
-        // Check if channel exists
-        const channelCheck = await db.query('SELECT id FROM channels WHERE id = $1', [channelId]);
-        if (channelCheck.rows.length === 0) {
-            return res.status(404).json({ error: 'Channel not found' });
-        }
-
-        const result = await db.query(
-            'INSERT INTO messages (content, user_id, channel_id) VALUES ($1, $2, $3) RETURNING *',
-            [content, user_id, channelId]
-        );
-
-        res.status(201).json(result.rows[0]);
-    } catch (error) {
-        console.error('Error creating message:', error);
-        res.status(500).json({ error: 'Internal server error' });
+  try {
+    const channelCheck = await db.query(
+      "SELECT id FROM channels WHERE id = $1",
+      [channelId]
+    );
+    if (channelCheck.rows.length === 0) {
+      return res.status(404).json({ error: "Channel not found" });
     }
+
+    const result = await db.query(
+      "INSERT INTO messages (content, user_id, channel_id) VALUES ($1, $2, $3) RETURNING *",
+      [content, user_id, channelId]
+    );
+
+    res.status(201).json(result.rows[0]);
+  } catch (error) {
+    console.error("Error creating message:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
 };
 
 // Get messages in a channel
@@ -40,38 +42,60 @@ const createMessage = async (req, res) => {
 */
 
 const getChannelMessages = async (req, res) => {
-    const channelId = parseInt(req.params.id);
+  const userId = req.query.user_id;
+  const channelId = req.params.id;
 
-    try {
-        // Check if channel exists
-        const channelCheck = await db.query('SELECT id FROM channels WHERE id = $1', [channelId]);
-        if (channelCheck.rows.length === 0) {
-            return res.status(404).json({ error: 'Channel not found' });
-        }
+  if (isNaN(channelId)) {
+    return res.status(400).json({ error: "Invalid channel ID" });
+  }
 
-        //TODO:  fån in alla användare * Joina users on U and _id
-        //TODO: om inte return error 
-        //TODO: om ja hämta alla messages i channelen 
-        //TODO: return messages
-        // $1 refers to the first parameter in the array that's passed to the query
+  try {
+    const subCheck = await db.query(
+      `SELECT * FROM subscriptions 
+       WHERE user_id = $1 AND channel_id = $2`,
+      [userId, channelId]
+    );
 
-        const result = await db.query(
-            `SELECT m.*, u.username 
-             FROM messages m 
-             JOIN users u ON m.user_id = u.id 
-             WHERE m.channel_id = $1 
-             ORDER BY m.created_at DESC`,
-            [channelId]
-        );
-
-        res.json(result.rows);
-    } catch (error) {
-        console.error('Error fetching messages:', error);
-        res.status(500).json({ error: 'Internal server error' });
+    if (subCheck.rows.length === 0) {
+      return res
+        .status(403)
+        .json({ error: "You are not subscribed to this channel" });
     }
+
+    const channelCheck = await db.query(
+      "SELECT channel_id FROM channels WHERE channel_id = $1",
+      [channelId]
+    );
+    if (channelCheck.rows.length === 0) {
+      return res.status(404).json({ error: "Channel not found" });
+    }
+
+    const result = await db.query(
+      `SELECT 
+  m.id AS message_id,
+  m.content,
+  m.user_id,
+  u.username,
+  m.channel_id,
+  c.name AS channel_name,
+  m.created_at
+FROM messages m
+JOIN users u ON m.user_id = u.user_id
+JOIN channels c ON m.channel_id = c.channel_id
+WHERE m.channel_id = $1
+ORDER BY m.created_at ASC;
+`,
+      [channelId]
+    );
+
+    res.json(result.rows);
+  } catch (err) {
+    console.error("Failed to fetch channel messages:", err);
+    res.status(500).json({ message: "Could not fetch messages" });
+  }
 };
 
 module.exports = {
-    createMessage,
-    getChannelMessages
-}; 
+  createMessage,
+  getChannelMessages,
+};
