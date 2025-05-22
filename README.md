@@ -1,6 +1,6 @@
 # **SQL Bulletin** **_Fibonachos gruppexamen_** _NO⭐_
 
-### Video presentation: 📼 https://youtu.be/Ppyt-hJbEL0 📼
+### Video presentation: 📼 https://youtu.be/z1hNnSuiQaI 📼
 
 ---
 
