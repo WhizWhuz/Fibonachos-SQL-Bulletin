@@ -11,7 +11,12 @@ exports.createSubscription = async (req, res) => {
 			[user_id, channel_id]
 		);
 
-		res.status(201).json(result.rows[0]);
+		res
+			.status(201)
+			.json({
+				message: "Subscription successful!",
+				subscription: result.rows[0],
+			});
 	} catch (error) {
 		console.error("Failed to subscribe: ", error);
 		res.status(500).json({ error: "Could not subscribe to channel!" });
