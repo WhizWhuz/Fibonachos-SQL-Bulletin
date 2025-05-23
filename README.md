@@ -19,7 +19,7 @@
 
 ### ER Diagram 📏
 
-![Alt Text](https://media.discordapp.net/attachments/1355442392521642066/1375010243427303455/ER-diagram.png?ex=68302194&is=682ed014&hm=cf5950e723daf2504cb88b3436d810686ef615536fa331d999e26985dd3eab4d&=&format=webp&quality=lossless)
+<img src="./ER-diagram.png">
 
 ## Structure
 
